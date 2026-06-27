@@ -20,7 +20,7 @@ jobs:
 
     - name: Install Dependencies & Build React
       run: |
-        npm ci
+        npm install
         npm run build
 
     - name: Set up JDK 17 (Required for Android)
