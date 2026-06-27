@@ -4,7 +4,7 @@ android {
     namespace = "com.b4130478.safemp3player"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.b4130478.safemp3player"
+        applicationId "com.safemp3player.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 36
         versionCode 1
