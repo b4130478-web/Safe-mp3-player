@@ -35,7 +35,7 @@ jobs:
 
     - name: Sync Capacitor Mobile Framework
       run: |
-        npx cap sync android
+        npx @capacitor/cli sync android
 
     - name: Build Android Release APK
       run: |
