@@ -17,10 +17,15 @@ jobs:
       with:
         node-version: 20
 
-    - name: Install Dependencies & Build React
+    - name: Install Dependencies
       run: |
-        npm install --legacy-peer-deps --no-audit --no-fund
-        npm run build --if-present
+        npm install --legacy-peer-deps
+
+    - name: Build React Production Package
+      env:
+        CI: false
+      run: |
+        npm run build
 
     - name: Set up JDK 17 (Required for Android)
       uses: actions/setup-java@v4
@@ -28,7 +33,7 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    - name: Sync Capacitor
+    - name: Sync Capacitor Mobile Framework
       run: |
         npx cap sync android
 
