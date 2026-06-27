@@ -67,7 +67,9 @@ export default function App() {
       sourceRef.current = source;
       bassFilterRef.current = bassFilter;
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tracks]);
+
 
   // Handle Dynamic Toggling of Bass Boost values on the fly
   useEffect(() => {
