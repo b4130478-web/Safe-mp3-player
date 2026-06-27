@@ -42,6 +42,7 @@ jobs:
       run: |
         cd android
         chmod +x gradlew
+        echo "org.gradle.java.home=$JAVA_HOME_21_X64" >> gradle.properties
         ./gradlew assembleRelease --no-daemon
         
     - name: Upload APK Artifact
