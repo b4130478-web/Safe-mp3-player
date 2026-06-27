@@ -20,6 +20,7 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install --legacy-peer-deps
+        npm install -D typescript
 
     - name: Build React Production Package
       env:
