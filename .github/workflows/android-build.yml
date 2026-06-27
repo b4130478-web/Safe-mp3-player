@@ -28,11 +28,11 @@ jobs:
       run: |
         npm run build
 
-    - name: Set up JDK 17 (Required for Android)
+    - name: Set up JDK 21 (Required for New Capacitor Templates)
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '17'
+        java-version: '21'
 
     - name: Sync Capacitor Mobile Framework
       run: |
