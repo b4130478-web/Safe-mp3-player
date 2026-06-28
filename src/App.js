@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
+
 
 export default function App() {
   const [tracks, setTracks] = useState([]);
@@ -22,6 +25,52 @@ export default function App() {
   
   // Persistent ref for the Bass Equalizer Node
   const bassFilterRef = useRef(null);
+ 
+ // Auto-scan Android Music Folder on app startup
+  useEffect(() => {
+    const scanSystemMusicFolder = async () => {
+      try {
+        const status = await Filesystem.requestPermissions();
+        if (status.publicStorage !== 'granted') return;
+
+        const result = await Filesystem.readdir({
+          path: '',
+          directory: Directory.ExternalStorage,
+        });
+
+        const musicFolder = result.files.find(f => f.name.toLowerCase() === 'music');
+        
+        if (musicFolder) {
+          const musicContent = await Filesystem.readdir({
+            path: 'Music',
+            directory: Directory.ExternalStorage,
+          });
+
+          const mp3Files = musicContent.files.filter(file => 
+            file.name.toLowerCase().endsWith('.mp3')
+          );
+
+          const loadedTracks = mp3Files.map(file => ({
+            name: file.name.replace(/\.[^/.]+$/, ""), // Matches your format schema
+            url: Capacitor.convertFileSrc(file.uri),  // Generates valid streaming asset URL
+          }));
+
+          if (loadedTracks.length > 0) {
+            setTracks(loadedTracks);
+            setCurrentIndex(0);
+          }
+        }
+      } catch (err) {
+        console.error("Could not scan local files:", err);
+      }
+    };
+
+    // Only run if app is running natively on a phone
+    if (Capacitor.isNativePlatform()) {
+      scanSystemMusicFolder();
+    }
+  }, []);
+
 
   const handleFolderUpload = (e) => {
     const files = Array.from(e.target.files);
