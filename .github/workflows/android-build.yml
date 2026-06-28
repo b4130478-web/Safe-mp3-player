@@ -28,7 +28,7 @@ jobs:
       run: |
         npm run build
 
-    - name: Set up JDK 21 (Required for New Capacitor Templates)
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
@@ -44,9 +44,16 @@ jobs:
         chmod +x gradlew
         echo "org.gradle.java.home=$JAVA_HOME_21_X64" >> gradle.properties
         ./gradlew assembleRelease --no-daemon
-        
-    - name: Upload APK Artifact
+
+    - name: Sign APK File
+      run: |
+        cd android/app/build/outputs/apk/release/
+        sudo apt-get install -y apksigner
+        keytool -genkeypair -v -keystore release.p12 -storetype pkcs12 -alias my-alias -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=App, O=App, C=US"
+        apksigner sign --ks release.p12 --ks-pass pass:123456 --out Safe-MP3-Player-Signed.apk app-release-unsigned.apk
+
+    - name: Upload Pre-Signed APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Safe-MP3-Player-APK
-        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        path: android/app/build/outputs/apk/release/Safe-MP3-Player-Signed.apk
